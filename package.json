@@ -1,0 +1,27 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michsgithub/ScrapeNewsApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michsgithub/ScrapeNewsApp/issues"
+  },
+  "homepage": "https://github.com/michsgithub/ScrapeNewsApp#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express-handlebars": "^3.0.0",
+    "mongo": "^0.1.0",
+    "mongojs": "^2.6.0",
+    "mongoose": "^5.4.5"
+  }
+}
