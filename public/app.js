@@ -8,15 +8,21 @@ $(document).ready(function(){
 	var currentArticle = 0;
 	var nextArticle = 0;	
 
-	$('#comments').addClass('hidden');
-
 	// Scrape website on initial page load
-	$.getJSON('/scrape', function(){
+	$.getJSON('/scrape', function(data){
+		for(var i=0; i< data.length; i++){
+			// console.log(data);
+			$.post("/addarticle/" , data[i], function(e) {
+				e.preventDefault();
+			});
+		}
 	});
 
 	// Get all articles when read articles button clicked and build an array of articles
 	$(document).on('click','#getArticles', function(){
+		console.log('getarticles clicked')
 		$.getJSON('/articles', function(data){
+			console.log('read from articles api');
 			articleList = data;
 			article = articleList[0];
 			showArticle(article);
@@ -63,42 +69,42 @@ $(document).ready(function(){
 		showComments(articleId);
 	});		
 
+
+
+
 	// Function to build article display
 	var showArticle = function(article) {
+		console.log(article);
 		$('#title').text(article.title);
-		$("#image").removeClass("hidden");
-		$('#image').attr('src', article.imgLink);
+		// $("#image").removeClass("hidden");
+		// $('#image').attr('src', article.imgLink);
 		$('#summary').text(article.summary);
-		$("#readArticle").removeClass("hidden");
-		$('#article').attr('href', article.storyLink);
-		$("#getArticles").addClass("hidden");
-		$("#navigation").empty();
-		previousArticle = currentArticle - 1;
-		if(previousArticle >= 0) {
-			$('#navigation').append('<button id="'+previousArticle+'" class="btn btn-primary previous">Previous Article</button>');
-		} else {
-			$('#navigation').append('<button id="'+previousArticle+'" class="btn btn-primary disabled previous">Previous Article</button>');
-		}
-		nextArticle = currentArticle + 1;
-		if(nextArticle < articleList.length) {
-			$('#navigation').append('<button id="'+nextArticle+'" class="btn btn-primary pull-right next">Next Article</button>');
-		} else {
-			$('#navigation').append('<button id="'+nextArticle+'" class="btn btn-primary pull-right disabled next">Next Article</button>');
-		}
+		$('#readArticle').attr('href', 'https://www.cnbc.com'+article.storyLink);
+		//previousArticle = currentArticle - 1;
+		// if(previousArticle >= 0) {
+		// 	$('#navigation').append('<button id="'+previousArticle+'" class="btn btn-primary previous">Previous Article</button>');
+		// } else {
+		// 	$('#navigation').append('<button id="'+previousArticle+'" class="btn btn-primary disabled previous">Previous Article</button>');
+		// }
+		// nextArticle = currentArticle + 1;
+		// if(nextArticle < articleList.length) {
+		// 	$('#navigation').append('<button id="'+nextArticle+'" class="btn btn-primary pull-right next">Next Article</button>');
+		// } else {
+		// 	$('#navigation').append('<button id="'+nextArticle+'" class="btn btn-primary pull-right disabled next">Next Article</button>');
+		// }
 		articleId = article._id;
 		showComments(articleId);
 	}
 
 	// Function to build comments display for article
 	var showComments = function(articleId) {
-		$("#comments").removeClass("hidden");
-		$("#articleComments").empty();
+		$("#comments").empty();
 		var commentText = '';
 		$.getJSON('comments/'+articleId, function(data){
 			for(var i = 0; i < data.length; i++){
 				commentText = commentText + '<div class="well"><span id="'+data[i]._id+'" class="glyphicon glyphicon-remove text-danger deletecomment"></span> '+data[i].comment+' - '+data[i].name+'</div>';
 			}
-			$("#articleComments").append(commentText);
+			$("#comments").append(commentText);
 		});
 	}
 

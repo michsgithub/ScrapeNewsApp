@@ -1,3 +1,6 @@
+
+var mongoose = require("mongoose");
+
 var commentsSchema = new mongoose.Schema({
 	articleId: {
 		type: String

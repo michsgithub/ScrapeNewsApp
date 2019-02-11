@@ -40,31 +40,36 @@ router.get('/home', function(req, res) {
     });
 });
 
-// Default route renders the index handlebars view
-router.get('/', function(req, res){
-	res.render('index');
-});
 
 // Scrape the website and assign stories to the database. Checks to verify story has not been added previously.
 router.get('/scrape', function(req, res){
-    request(url, function(error, response, html) {	
+	 // body of the html with request
+	 request(url, function(error, response, html) {
         var $ = cheerio.load(html);
 		var result = [];
-		// Scrape website
 		$(".cnbcnewsstory").each(function(i, element) {
-		    var title = $(element).find("a").find("img").attr("title");
-		    var imgLink = $(element).find("a").find("img").attr("src");
-		    var storyLink = $(element).find("a").attr("href");
-		    var summary = $(element).find(".td-post-text-excerpt").text();
-			result[i] = ({ 
-				title: title,
-				imgLink: imgLink,
-				storyLink: storyLink,
-				summary: summary
-			});		
+			var title = $(element).find("a").find("img").attr("title");
+			var storyLink = $(element).find("a").attr("href");
+			var imgLink = $(element).find("a").find("img").attr("src");
+			var summary = $(element).find(".desc").text();
+			result.push({ 
+				Title: title,
+				Link: storyLink,
+				Image: imgLink,
+				Summary: summary
+			});
 		});
-    });	
+		res.send(result);
+	});
 });
+
+
+// Default route renders the index handlebars view
+router.get('/', function(req, res){
+	console.log('in home');
+	res.render('index');
+});
+
 
 // Get all current articles in database
 router.get('/articles', function(req, res){
@@ -97,6 +102,22 @@ router.post('/addcomment/:id', function(req, res){
 			console.log(err);			
 		} else {
 			console.log("New Comment Added");
+		}
+	});
+});
+
+// Add comment for article
+router.post('/addarticle', function(req, res){
+	Articles.create({
+		title: req.body.Title,
+		imgLink: '',
+		storyLink: req.body.Link,
+		summary: req.body.Summary
+	}, function(err, docs){    
+		if(err){
+			console.log(err);			
+		} else {
+			console.log("New Article Added");
 		}
 	});
 });

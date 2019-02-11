@@ -8,6 +8,15 @@ var axios = require ('axios');
 
 var app = express();
 
+
+// var timeout = require('connect-timeout'); //express v4
+// app.use(timeout(380000));
+// app.use(haltOnTimedout);
+// function haltOnTimedout(req, res, next){
+//   if (!req.timedout) next();
+// }
+
+
 // Public Settings
 app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 3000;
@@ -28,8 +37,9 @@ app.engine('handlebars', expressHandlebars({
 }));
 app.set('view engine', 'handlebars');
 
+
 //Routes
-var routes = require('./controllers/news.js');
+var routes = require('./controllers/cnbcNews.js');
 app.use('/',routes);
 
 //Port
